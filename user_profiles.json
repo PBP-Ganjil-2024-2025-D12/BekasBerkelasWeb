@@ -1,0 +1,296 @@
+[
+{
+    "model": "authentication.userprofile",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "name": "Ramy",
+        "email": "ramy@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "name": "Ultramy",
+        "email": "ultramy@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "name": "UltraRamy",
+        "email": "ultraramy@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 4,
+    "fields": {
+        "user": 4,
+        "name": "Naufal",
+        "email": "naufal@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 5,
+    "fields": {
+        "user": 5,
+        "name": "Muhammad",
+        "email": "muhammad@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 6,
+    "fields": {
+        "user": 6,
+        "name": "Ramadhan",
+        "email": "ramadhan@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 7,
+    "fields": {
+        "user": 7,
+        "name": "Steven",
+        "email": "steven@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 8,
+    "fields": {
+        "user": 8,
+        "name": "Setiawan",
+        "email": "setiawan@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 9,
+    "fields": {
+        "user": 9,
+        "name": "Wida",
+        "email": "wida@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 10,
+    "fields": {
+        "user": 10,
+        "name": "Putri",
+        "email": "putri@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 11,
+    "fields": {
+        "user": 11,
+        "name": "Deanita",
+        "email": "deanita@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 12,
+    "fields": {
+        "user": 12,
+        "name": "Chip",
+        "email": "chip@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 13,
+    "fields": {
+        "user": 13,
+        "name": "Skylar",
+        "email": "skylar@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 14,
+    "fields": {
+        "user": 14,
+        "name": "Case",
+        "email": "case@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 15,
+    "fields": {
+        "user": 15,
+        "name": "Shino",
+        "email": "shino@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 16,
+    "fields": {
+        "user": 16,
+        "name": "Nadia",
+        "email": "nadia@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 17,
+    "fields": {
+        "user": 17,
+        "name": "Rahmadina",
+        "email": "rahmadina@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 18,
+    "fields": {
+        "user": 18,
+        "name": "Aristawati",
+        "email": "aristawati@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 19,
+    "fields": {
+        "user": 19,
+        "name": "Okin",
+        "email": "okin@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 20,
+    "fields": {
+        "user": 20,
+        "name": "Niko",
+        "email": "niko@gmail.com",
+        "no_telp": "1234567890",
+        "role": "SEL",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+},
+{
+    "model": "authentication.userprofile",
+    "pk": 21,
+    "fields": {
+        "user": 21,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "no_telp": "1234567890",
+        "role": "ADM",
+        "profile_picture": null,
+        "profile_picture_id": null,
+        "is_verified": true
+    }
+}
+]

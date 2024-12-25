@@ -1,0 +1,26 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block content %}
+<div class="w-full bg-white shadow-md rounded-3xl p-6 max-h-64 overflow-hidden">
+    <div class="w-full flex justify-between items-center">
+        <div class="w-fit space-x-2 flex items-center">
+            <img src="{% static 'image/logo-text.png' %}" class="w-8 h-8 rounded-full">
+            <p class="albert-sans-semibold">username</p>
+        </div>
+        <div class="w-fit space-x-1 flex">
+            {% for i in stars %}
+                <img src="{% static 'image/star_fill.svg' %}" class="w-6 h-6">
+            {% endfor %}
+            {% for i in empty_stars %}
+                <img src="{% static 'image/star_border.svg' %}" class="w-6 h-6">
+            {% endfor %}
+        </div>
+    </div>
+    <div class="mt-4 max-h-full overflow-hidden">
+        <p class="overflow-hidden text-ellipsis" style="font-family:'Albert Sans', sans-serif; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+            {% lorem 1 b random %}
+        </p>
+    </div>
+</div>
+{% endblock %}

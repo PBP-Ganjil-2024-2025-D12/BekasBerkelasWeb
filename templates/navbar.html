@@ -1,0 +1,132 @@
+{% load static %} 
+<nav class="fixed shadow-lg top-0 left-0 z-50 w-screen bg-white">
+    <div class="max-w-8xl ms-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <img src="{% static 'image/logo.png' %}" alt="Logo" style="height: 30px;">
+            </div>
+        
+            <div class="md:flex items-center hidden">
+                <a href="{% url 'main:main' %}" class="text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 mr-2">
+                    Beranda
+                </a>
+                
+                <a href="{% url 'product_catalog:car_list' %}" class="text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 mr-2">
+                    Katalog
+                </a>
+
+                {% if request.user.is_authenticated and request.user.userprofile.role == 'SEL' %}
+                <a href="{% url 'product_catalog:mobil_saya' %}" class="text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 mr-2">
+                    Mobil Saya
+                </a>
+                {% endif %}
+
+                <a href="{% url 'forum:show_forum' %}" class="text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 mr-4">
+                    Forum
+                </a>
+
+                {% if request.user.is_authenticated %}
+                <div class="relative inline-block text-left">
+                    <button id="dropdown-button" class="inline-flex items-center text-[#1f1c61] hover:text-blue-800">
+                        <span class="text-[#1f1c61] text-xl albert-sans-semibold mr-2">
+                            Welcome, 
+                            <span class="text-[#5A71BC]">{{ request.user.userprofile.name }}</span>
+                        </span>
+                        <svg id="" class="w-4 h-4 down-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6" />
+                        </svg>
+                        <svg class="w-4 h-4 up-arrow hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 15l6-6 6 6" />
+                        </svg>
+                    </button>
+                    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div class="py-1">
+                            <a href="/dashboard" class="block text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 hover:bg-gray-100">
+                                Account
+                            </a>
+                            {% if request.user.userprofile.role == 'BUY' %}
+                            <a href="/wishlist" class="block text-center text-xl text-[#1f1c61] albert-sans-semibold px-5 py-2 hover:bg-gray-100">
+                                Wishlist
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'authentication:logout' %}" class="block text-center text-xl text-red-600 albert-sans-semibold px-5 py-2 hover:bg-gray-100">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    <a href="{% url 'authentication:login' %}" class="flex items-center justify-center gap-2 bg-[#4475F2] hover:bg-[#3461d6] text-white font-medium py-2 px-4 rounded-xl transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span class="albert-sans-semibold">Log in</span>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="md:hidden flex items-center">
+                {% if not request.user.is_authenticated %}
+                <a href="{% url 'authentication:login' %}" class="inline-flex mx-3 items-center justify-center gap-2 bg-[#4475F2] hover:bg-[#3461d6] text-white font-medium py-2 px-4 rounded-xl transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="albert-sans-semibold">Log in</span>
+                </a>
+                {% endif %}
+                <button class="mobile-menu-button">
+                    <svg class="w-6 h-6 text-black hamburger-icon" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg class="w-6 h-6 text-black x-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
+        <div class="pt-2 pb-3 space-y-1 mx-auto">
+            <a href="{% url 'main:main' %}" class="block text-[#1f1c61] text-xl albert-sans-semibold hover:bg-[#F5F5F5] rounded-xl px-3 py-2 mb-2">
+                Beranda
+            </a>
+
+            <a href="#placeholder" class="block text-[#1f1c61] text-xl albert-sans-semibold hover:bg-[#F5F5F5] px-3 py-2 mb-2">
+                Katalog
+            </a>
+
+            {% if request.user.is_authenticated and request.user.userprofile.role == 'SEL' %}
+            <a href="#placeholder" class="block text-[#1f1c61] text-xl albert-sans-semibold hover:bg-[#F5F5F5] px-3 py-2 mb-2">
+                Mobil Saya
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'forum:show_forum' %}" class="block text-[#1f1c61] text-xl albert-sans-semibold hover:bg-[#F5F5F5] rounded-xl px-3 py-2 mb-2">
+                Forum
+            </a>
+
+            {% if request.user.is_authenticated %}
+                {% if request.user.userprofile.role == 'BUY' %}
+                <a href="/wishlist" class="block text-[#1f1c61] text-xl albert-sans-semibold hover:bg-[#F5F5F5] rounded-xl px-3 py-2 mb-2">
+                    Wishlist
+                </a>
+                {% endif %}
+                <span class="block text-[#1f1c61] text-xl albert-sans-semibold px-3 py-2">
+                    Welcome, 
+                    <span class="text-[#5A71BC]">
+                        {{ request.user.userprofile.name }}!
+                    </span>
+                </span>
+                <a href="/dashboard" class="block text-[#1f1c61] text-xl ml-3 albert-sans-semibold hover:bg-[#F5F5F5] rounded-xl px-3 py-2 mb-2">
+                    Account
+                </a>
+                <a href="{% url 'authentication:logout' %}" class="block text-red-600 ml-3 text-xl albert-sans-semibold hover:bg-[#F5F5F5] rounded-xl px-3 py-2 mb-2">
+                    Logout
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{% static 'js/navbar.js' %}"></script>
+</nav>

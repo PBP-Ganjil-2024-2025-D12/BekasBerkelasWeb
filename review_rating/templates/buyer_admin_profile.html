@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% load static %}
+
+{% block meta %}
+<title>Profile | {{ user.username }}</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="flex items-center justify-center min-h-screen bg-[#d8e7ff] p-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-8 flex flex-col items-center">
+            {% if user.userprofile.profile_picture %}
+                <img src="{{ user.userprofile.profile_picture }}" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover flex-shrink-0 shadow-lg">
+            {% else %}
+            <img src="{% static 'user_dashboard/image/default-profile.png' %}" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover flex-shrink-0 shadow-lg">
+            {% endif %}
+            
+            <h1 class="mt-4 text-2xl font-bold text-gray-900">{{ user.userprofile.name }}</h1>
+            <p class="mt-1 text-gray-600">@{{ user.username }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

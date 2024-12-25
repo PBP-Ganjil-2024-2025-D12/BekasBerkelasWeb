@@ -1,0 +1,81 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block meta %}
+    <title> Wish List | BekasBerkelas </title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock meta %} 
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="bg-blue-100 min-h-screen py-10 pt-32">
+        <div class="container mx-auto px-4">
+            <h1 class="text-center text-4xl text-[#1F1C61] font-bold albert-sans mb-6">Wish List</h1>
+            
+            <div class="flex flex-col items-center mb-8">
+                <form method="get" class="flex flex-col items-center gap-2">
+                    <label class="text-xl text-[#1F1C61] font-semibold albert-sans">Berdasarkan prioritas:</label>
+                    <div>
+                        <select name="priority" 
+                            class="border border-[#07288B] text-[#07288B] rounded-md px-3 py-2 mt-2" 
+                            onchange="this.form.submit()">
+                        <option value="" class="text-[#07288B] albert-sans">Semua</option>
+                        {% for value, label in priority_choices %}
+                        <option value="{{ value }}" 
+                                class="text-[##07288B] albert-sans"
+                                {% if selected_priority == value|stringformat:"i" %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                {% if wishlists %}
+                    {% for item in wishlists %}
+                    <div class="bg-white border-2 border-[#0A39C4] rounded-lg shadow-lg p-4" id="wishlist-item-{{ item.id }}">
+                        <div class="relative">
+                            <img src="{{ item.car.image_url }}" alt="{{ item.car.name }}" class="w-full h-48 object-cover rounded-t-md mb-4">
+                        </div>
+                        <div>
+                            <h2 class="text-center text-xl text-[#1F1C61] font-bold albert-sans mb-2">{{ item.car.car_name }}</h2>
+                            <p class="text-left text-lg text-[#07288B] font-semibold albert-sans mb-1">Rp {{ item.car.price }}</p>
+                            <p class="text-left text-base text-black font-albert-sans">{{ item.car.brand }}</p>
+                            <p class="text-left text-base text-black font-albert-sans">{{ item.car.year }}</p>
+                            <p class="text-left text-base text-black font-albert-sans">{{ item.car.mileage }} km</p>
+                            
+                            <div class="mt-3 flex flex-col items-center">
+                                <span class="text-sm text-[#0A39C4] font-albert-sans mb-2">Prioritas: 
+                                    {% if item.priority == 1 %}Rendah
+                                    {% elif item.priority == 2 %}Sedang
+                                    {% else %}Tinggi{% endif %}
+                                </span>
+                                
+                                <div class="flex items-center justify-center space-x-2">
+                                    <a href="{% url 'wishlist:edit_wishlist' wishlist_id=item.id %}" 
+                                       class="bg-[#174FF3] hover:bg-[#0A39C4] text-white font-semibold font-albert-sans px-4 py-2 rounded-lg">
+                                        Edit
+                                    </a>
+                                    
+                                    <form action="{% url 'wishlist:remove_from_wishlist' wishlist_id=item.id %}" method="post" class="inline-block">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-[#FB3748] hover:bg-[#D00416] text-white font-semibold font-albert-sans px-4 py-2 rounded-lg">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+                    {% endfor %}
+                    
+                {% else %}
+                    <p class="text-center text-lg text-black font-albert-sans col-span-4">Belum ada mobil dalam Wish List</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,239 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block meta %}
+<title>Mobil Saya | BekasBerkelas</title>
+<style>
+    select:focus + div svg {
+        transform: rotate(180deg);
+    }
+    
+    .wishlist-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+    .wishlist-button.active svg {
+        fill: red;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 7xl;
+        margin: 0 auto;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 50;
+    }
+
+    .modal-backdrop.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="overflow-x-hidden px-3 sm:px-4 md:px-8 pb-6 sm:pb-8 pt-20 sm:pt-24 min-h-screen bg-blue-100 flex flex-col">
+    <div class="w-full max-w-7xl mx-auto mb-4 sm:mb-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-[#1f1c61] albert-sans-semibold">
+                Katalog Mobil
+            </h1>
+            {% if is_seller %}
+            <a href="{% url 'product_catalog:create_car' %}" class="ml-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-xl transition duration-300 ease-in-out text-base shadow-sm">
+                Tambah Mobil Baru
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+    <script>
+        alert("{% for message in messages %}{{ message|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}");
+    </script>
+    {% endif %}
+
+    <div class="w-full max-w-7xl mx-auto mb-4 sm:mb-6 albert-sans-semibold">
+        <div class="bg-white rounded-lg p-3 sm:p-4 shadow-sm">
+            <form method="GET" action="{% url 'product_catalog:car_list' %}" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div class="flex-1">
+                    <input type="text" name="car_name" id="car_name" placeholder="Cari Mobil..." 
+                           value="{{ form.car_name.value|default:'' }}"
+                           class="w-full px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <div class="relative">
+                        <input type="text" name="brand" id="brand" placeholder="Brand" 
+                               value="{{ form.brand.value|default:'' }}"
+                               class="w-full sm:w-auto px-3 sm:px-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <button type="button" id="toggle-filters" 
+                            class="w-full sm:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-300 shadow-sm">
+                        Filter Lainnya
+                    </button>
+                </div>
+            </form>
+
+            <div id="additional-filters" class="hidden mt-4 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <input type="number" name="mileage" id="mileage" placeholder="Kilometer" 
+                           value="{{ form.mileage.value|default:'' }}"
+                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                           
+                    <input type="text" name="location" id="location" placeholder="Lokasi" 
+                           value="{{ form.location.value|default:'' }}"
+                           class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                           
+                    <select name="transmission" id="transmission" 
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">Transmisi</option>
+                        {% for choice in form.transmission.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == form.transmission.value %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="plate_type" id="plate_type" 
+                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">Tipe Plat</option>
+                        {% for choice in form.plate_type.field.choices %}
+                            <option value="{{ choice.0 }}" {% if choice.0 == form.plate_type.value %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="rear_camera" id="rear_camera" {% if form.rear_camera.value %}checked{% endif %}
+                               class="rounded text-blue-500 focus:ring-blue-500">
+                        <span>Kamera Belakang</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" name="sun_roof" id="sun_roof" {% if form.sun_roof.value %}checked{% endif %}
+                               class="rounded text-blue-500 focus:ring-blue-500">
+                        <span>Sunroof</span>
+                    </label>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-300 shadow-sm">
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-7xl mx-auto">
+        {% for car in cars %}
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            {% if car.image_url %}
+            <img src="{{ car.image_url }}" alt="{{ car.car_name }}" class="w-full h-48 object-cover">
+            {% endif %}
+            <div class="p-4">
+                <h3 class="text-lg font-bold text-[#1f1c61]">{{ car.car_name }}</h3>
+                <p class="text-blue-500 font-semibold">Rp {{ car.price }}</p>
+                
+                <div class="mt-4 flex gap-2">
+                    <form method="POST" action="{% url 'product_catalog:view_details' car.id %}" class="flex-1">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-300 shadow-sm">
+                            Detail
+                        </button>
+                    </form>
+                    
+                    {% if is_buyer %}
+                    <button onclick="openContactModal({{ car.id }})" 
+                            class="flex-1 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition duration-300 shadow-sm">
+                        Hubungi
+                    </button>
+                    <button class="wishlist-button p-2 text-gray-400 hover:text-red-500" onclick="toggleWishlist(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg>
+                    </button>
+                    {% endif %}
+                    
+                    {% if not is_buyer %}
+                    <form method="POST" action="{% url 'product_catalog:delete_car' car.id %}" class="flex-1">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Yakin ingin menghapus mobil ini?');"
+                                class="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition duration-300 shadow-sm">
+                            Hapus
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-8 text-gray-500">
+            Tidak ada mobil tersedia.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% for car in cars %}
+<div id="contact-modal-{{ car.id }}" class="modal-backdrop">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
+        <h2 class="text-xl font-bold mb-4">Kontak Penjual</h2>
+        <div class="space-y-2">
+            <p><strong>Email:</strong> {{ car.seller.userprofile.email }}</p>
+            <p><strong>No. Telp:</strong> {{ car.seller.userprofile.no_telp }}</p>
+        </div>
+        <button onclick="closeContactModal({{ car.id }})" 
+                class="mt-4 w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-300 shadow-sm">
+            Tutup
+        </button>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    document.getElementById('toggle-filters').addEventListener('click', function() {
+        const additionalFilters = document.getElementById('additional-filters');
+        additionalFilters.classList.toggle('hidden');
+    });
+
+    function openContactModal(carId) {
+        const modal = document.getElementById(`contact-modal-${carId}`);
+        modal.classList.add('show');
+    }
+
+    function closeContactModal(carId) {
+        const modal = document.getElementById(`contact-modal-${carId}`);
+        modal.classList.remove('show');
+    }
+
+    function toggleWishlist(button) {
+        const icon = button.querySelector('svg');
+        icon.classList.toggle('text-red-500');
+    }
+    function formatRupiah(price) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    }
+
+    document.querySelectorAll(".product-price").forEach(function(priceElement) {
+      const price = priceElement.getAttribute("data-price");
+      priceElement.innerText = formatRupiah(price);
+    });
+</script>
+{% endblock content %}

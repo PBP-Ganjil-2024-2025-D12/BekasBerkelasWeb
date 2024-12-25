@@ -1,0 +1,279 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block mainbar %}
+
+<div class="flex gap-2 mt-4 mx-4 pt-3 pl-5 pb-3 border-b border-gray-400 p-4 ">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M560-440h200v-80H560v80Zm0-120h200v-80H560v80ZM200-320h320v-22q0-45-44-71.5T360-440q-72 0-116 26.5T200-342v22Zm160-160q33 0 56.5-23.5T440-560q0-33-23.5-56.5T360-640q-33 0-56.5 23.5T280-560q0 33 23.5 56.5T360-480ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z"/></svg>
+    <h2 class="albert-sans-semibold"> Biodata </h2>
+</div>
+<div class="flex flex-col grow items-center md:items-start md:grid md:grid md:grid-cols-[repeat(3,minmax(250px,1fr))] gap-4 py-4 p-10 w-full">
+    <div class="col-span-1 flex flex-col gap-4 items-center">
+        <div class="h-min w-full max-w-80 flex flex-col gap-4 items-center p-5 border-2 border-gray-500 rounded-lg m-5">
+            {% if request.user.userprofile.profile_picture %}
+                <img class="w-28 h-28" src="{{ request.user.userprofile.profile_picture }}" alt="Profile Picture" width="400" height="400">
+            {% else %}
+                <img class="w-28 h-28" src="{% static 'user_dashboard/image/default-profile.png' %}" alt="Default Profile Picture" width="400" height="400">
+            {% endif %}
+
+            <form id="form_upload_profile" class="flex flex-col gap-3 items-center" action="{% url 'dashboard:upload_profile_picture' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label id="profile_upload" class="profile_picture albert-sans-thin">Upload Profile Picture</label>
+                <input type="hidden" id="profile_picture_url" name="profile_picture_url">
+                <input type="hidden" id="profile_picture_id" name="profile_picture_id">
+                <button type="button" id="upload_profile" class="text-white albert-sans-semibold bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">Upload Gambar</button>
+            </form>
+        </div>
+        {% if not request.user.userprofile.role == 'ADM' %}
+        <a class="w-full min-w-64 max-w-80" href={% url 'dashboard:change_password' %}>
+            <div class="w-full flex gap-2 justify-center items-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5">
+                <svg xmlns="http://www.w4.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M80-200v-80h800v80H80Zm46-242-52-30 34-60H40v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Zm320 0-52-30 34-60h-68v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Zm320 0-52-30 34-60h-68v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Z"/></svg>
+                    <h2 class="albert-sans-semibold"> Change Password </h2>
+            </div>
+        </a>
+        {% endif %}
+    </div>
+
+
+    <div class="col-span-2 flex flex-col gap-3 max-w-full items-center md:items-start">
+        <h2 class="p-5 albert-sans-semibold text-lg"> Ubah Data Diri </h2>
+
+        <div class="flex gap-3 md:grid md:grid-cols-[repeat(3,minmax(100px,1fr))] px-5">
+            <h2 class"col-span-3 albert-sans-semibold"> Nama </h2>
+            <h2 id="namaUser" class="col-span-2 albert-sans-semibold"> {{ request.user.userprofile.name }} </h2>
+        </div>
+
+        <div class="flex gap-3 md:grid md:grid-cols-[repeat(3,minmax(100px,1fr))] px-5">
+            <h2 class"col-span-3 albert-sans-semibold"> Email </h2>
+            <h2 id="emailUser" class="col-span-2 albert-sans-semibold"> {{ request.user.userprofile.email }} </h2>
+        </div>
+
+        <div class="flex gap-3 md:grid md:grid-cols-[repeat(3,minmax(100px,1fr))] px-5">
+            <h2 class"col-span-3 albert-sans-semibold"> Nomor HP </h2>
+            <h2 id="noTelpUser" class="col-span-2 albert-sans-semibold"> {{ request.user.userprofile.no_telp }} </h2>
+        </div>
+
+        {% if request.user.userprofile.role == 'SEL' and not request.user.userprofile.is_verified %}
+        <div class="flex gap-3 md:grid md:grid-cols-[repeat(3,minmax(100px,1fr))] px-5">
+            <h2 class"col-span-3 albert-sans-semibold"> Status </h2>
+            <h2 id="noTelpUser" class="text-yellow-500 col-span-2 albert-sans-semibold text-nowrap"> Menunggu Verifikasi </h2>
+        </div>
+        {% elif request.user.userprofile.role == 'SEL' and request.user.userprofile.is_verified %}
+        <div class="flex gap-3 md:grid md:grid-cols-[repeat(3,minmax(100px,1fr))] px-5">
+            <h2 class"col-span-3 albert-sans-semibold"> Status </h2>
+            <h2 id="noTelpUser" class="text-green-500 col-span-2 albert-sans-semibold"> Terverifikasi </h2>
+        </div>
+        {% endif %}
+
+        <button id="modalNameButton" class="min-w-64 max-w-80 gap-2 albert-sans-semibold text-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5" type="submit">Ubah Nama</button>
+        <button id="modalEmailShow" class="min-w-64 max-w-80 gap-2 albert-sans-semibold text-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5" type="submit">Ubah Email</button>
+        <button id="modalNoTelpShow" class="min-w-64 max-w-80 albert-sans-semibold text-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5" type="submit">Ubah Nomor Telepon</button>
+    </div>
+</div>
+
+<div id="crudModal" tabindex="-1" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+    <div id="modalNama" class="hidden relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+
+        <div class="flex items-center justify-between p-4 border-b rounded-t">
+            <h3 class="text-xl albert-sans-semibold text-gray-900">
+                Ubah Nama
+            </h3>
+            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+
+        <div class="px-6 py-4 space-y-6 form-style">
+            <form id="changeNameForm">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm albert-sans-thin text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter New Name" required>
+                </div>
+            </form>
+        </div>
+        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+            <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white albert-sans-semibold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+            <button type="submit" id="submitName" form="changeNameForm" class="bg-blue-600 hover:bg-blue-800 text-white albert-sans-semibold py-2 px-4 rounded-lg">Save</button>
+        </div>
+    </div>
+
+    <div id="modalEmail" class="hidden relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+
+        <div class="flex items-center justify-between p-4 border-b rounded-t">
+            <h3 class="text-xl albert-sans-semibold text-gray-900">
+                Ubah Email
+            </h3>
+            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+        <div class="px-6 py-4 space-y-6 form-style">
+            <form id="changeEmailForm">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm albert-sans-thin text-gray-700">New Email</label>
+                    <input type="email" id="email" name="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter New Email" required>
+                </div>
+            </form>
+
+            <div id="responseMessage"></div>
+
+        </div>
+
+        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+            <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white albert-sans-semibold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+            <button type="submit" id="submitEmail" form="changeEmailForm" class="bg-blue-600 hover:bg-blue-800 text-white albert-sans-semibold py-2 px-4 rounded-lg">Save</button>
+        </div>
+    </div>
+
+    <div id="modalNoTelp" class="hidden relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+
+        <div class="flex items-center justify-between p-4 border-b rounded-t">
+            <h3 class="text-xl albert-sans-semibold text-gray-900">
+                Ubah Nomor Telepon
+            </h3>
+            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+        <div class="px-6 py-4 space-y-6 form-style">
+            <form id="changeNoTelpForm">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm albert-sans-thin text-gray-700">New Phone Number</label>
+                    <input type="number" id="no_telp" name="no_telp" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter New Phone Number" required>
+                </div>
+            </form>
+        </div>
+        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
+            <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white albert-sans-semibold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+            <button type="submit" id="submitNoTelp" form="changeNoTelpForm" class="bg-blue-600 hover:bg-blue-800 text-white albert-sans-semibold py-2 px-4 rounded-lg">Save</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript">
+</script>
+<script>
+    var userid = {{request.user.id}}
+    var timeStamp = Date.now();
+
+    var cloudinaryWidget = cloudinary.createUploadWidget({
+        cloudName: 'dknxfk0qc', 
+        uploadPreset: 'TK_PBP_D12',
+        sources: ['local', 'camera'], 
+        multiple: false,
+        folder: 'user_profile_pictures',
+        maxFileSize: 5 * 1024 * 1024,
+        cropping: true,
+        croppingAspectRatio: 1.0,
+        public_id: `profile_picture_user_${userid}_${timeStamp}`,
+        showSkipCropButton: false,
+    }, (error, result) => { 
+        if (!error && result && result.event === "success") { 
+            $("#profile_picture_url").val(result.info.secure_url);
+            $("#profile_picture_id").val(result.info.public_id);
+            $("#form_upload_profile").submit();
+        }
+    });
+
+    $(document).ready(function(){
+        $("#upload_profile").on("click", function(event){
+            event.preventDefault();
+            cloudinaryWidget.open();
+        });
+    });
+
+    function showModal(modalId) {
+        const modal = $('#crudModal');
+        const modalContent = $(modalId);
+
+        modal.removeClass('hidden');
+        modalContent.removeClass('hidden')
+        setTimeout(() => {
+            modalContent.removeClass('opacity-0 scale-95')   ;
+            modalContent.addClass('opacity-100 scale-100');
+        }, 50);
+    }
+
+    function hideModal() {
+        const modal = $('#crudModal');
+        const modalContent = modal.find('.opacity-100.scale-100');
+
+        modalContent.removeClass('opacity-100 scale-100');
+        modalContent.addClass('opacity-0 scale-95');
+        
+        setTimeout(() => {
+            $('#responseMessage').text('');
+            modal.addClass('hidden');
+            modalContent.addClass('hidden');
+        }, 150);
+        modalContent.find('form')[0].reset();
+    }
+
+    $(document).ready(function(){
+        $("#modalNameButton").on('click', function() {
+            showModal('#modalNama');
+        });
+
+        $("#modalEmailShow").on('click', function() {
+            showModal('#modalEmail');
+        });
+
+        $("#modalNoTelpShow").on('click', function() {
+            showModal('#modalNoTelp');
+        });
+
+        $("#crudModal #closeModalBtn, #crudModal #cancelButton").on('click', function() {
+            hideModal();
+        });
+    });
+
+    function updateProfile(attributeID, formID){
+        $.ajax({
+            url: '{% url 'dashboard:update_profile' %}',
+            method: 'POST',
+            data: new FormData($(formID)[0]),
+            processData: false, 
+            contentType: false,
+            
+            success: function(response){
+                console.log(response.status)
+                if (response.status == 'success'){
+                    $(attributeID).text(response.data)
+                    hideModal()
+                } else {
+                    $('#responseMessage').text("Data tidak valid").css('color', 'red')
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', error);
+            }
+        })
+    }
+
+    $(document).ready(function(){
+        $('#submitName').on('click', function(event) {
+            event.preventDefault()
+            updateProfile("#namaUser", "#changeNameForm")
+        })
+
+        $('#submitEmail').on('click', function(event) {
+            event.preventDefault()
+            updateProfile("#emailUser", "#changeEmailForm")
+        })
+
+        $('#submitNoTelp').on('click', function(event) {
+            event.preventDefault()
+            updateProfile("#noTelpUser", "#changeNoTelpForm")
+        })
+    })
+</script>
+{% endblock mainbar %}

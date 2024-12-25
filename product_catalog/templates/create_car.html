@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Create Car Listing | BebasBerkelas</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<section class="min-h-screen pt-20 px-10 md:px-10 flex flex-col bg-blue-100 items-center">
+    <div class="min-h-screen flex items-center justify-center w-full bg-blue-100">
+        <div class="space-y-8 bg-white p-8 rounded-xl shadow-lg albert-sans-semibold mb-8 w-full md:w-1/2">
+            <h1 class="text-xl font-bold text-center mb-4">Create a New Car Listing</h1>
+
+            <form method="POST" enctype="multipart/form-data" id="form_car" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="mb-6">
+                        <label for="car_name" class="block text-lg font-medium text-gray-700">Car Name</label>
+                        <input type="text" name="car_name" id="car_name"
+                               {% if form.car_name.value %} value="{{ form.car_name.value }}" {% else %} value="" {% endif %}
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.car_name.errors %}
+                            <div class="text-red-600">{{ form.car_name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="brand" class="block text-lg font-medium text-gray-700">Brand</label>
+                        <input type="text" name="brand" id="brand"
+                               {% if form.brand.value %} value="{{ form.brand.value }}" {% else %} value="" {% endif %}
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.brand.errors %}
+                            <div class="text-red-600">{{ form.brand.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+
+                    <div class="mb-6">
+                        <label for="year" class="block text-lg font-medium text-gray-700">Year</label>
+                        <input type="number" name="year" id="year" value="{{ form.year.value }}"
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.year.errors %}
+                            <div class="text-red-600">{{ form.year.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="mileage" class="block text-lg font-medium text-gray-700">Mileage</label>
+                        <input type="number" name="mileage" id="mileage" value="{{ form.mileage.value }}"
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.mileage.errors %}
+                            <div class="text-red-600">{{ form.mileage.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="location" class="block text-lg font-medium text-gray-700">Location</label>
+                        <select name="location" id="location"
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Location</option>
+                            <option value="Jakarta Utara" {% if form.location.value == 'Jakarta Utara' %}selected{% endif %}>Jakarta Utara</option>
+                            <option value="Jakarta Selatan" {% if form.location.value == 'Jakarta Selatan' %}selected{% endif %}>Jakarta Selatan</option>
+                            <option value="Jakarta Barat" {% if form.location.value == 'Jakarta Barat' %}selected{% endif %}>Jakarta Barat</option>
+                            <option value="Jakarta Timur" {% if form.location.value == 'Jakarta Timur' %}selected{% endif %}>Jakarta Timur</option>
+                            <option value="Jakarta Pusat" {% if form.location.value == 'Jakarta Pusat' %}selected{% endif %}>Jakarta Pusat</option>
+                        </select>
+                        {% if form.location.errors %}
+                            <div class="text-red-600">{{ form.location.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+
+                    <div class="mb-6">
+                        <label for="transmission" class="block text-lg font-medium text-gray-700">Transmission</label>
+                        <select name="transmission" id="transmission" 
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Transmission</option>
+                            <option value="Manual" {% if form.transmission.value == 'Manual' %}selected{% endif %}>Manual</option>
+                            <option value="Automatic" {% if form.transmission.value == 'Automatic' %}selected{% endif %}>Automatic</option>
+                        </select>
+                        {% if form.transmission.errors %}
+                            <div class="text-red-600">{{ form.transmission.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="plate_type" class="block text-lg font-medium text-gray-700">Plate Type</label>
+                        <select name="plate_type" id="plate_type" 
+                                class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Plate Type</option>
+                            <option value="Even" {% if form.plate_type.value == 'Even' %}selected{% endif %}>Even</option>
+                            <option value="Odd" {% if form.plate_type.value == 'Odd' %}selected{% endif %}>Odd</option>
+                        </select>
+                        {% if form.plate_type.errors %}
+                            <div class="text-red-600">{{ form.plate_type.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+
+                    <div class="mb-6">
+                        <label for="price" class="block text-lg font-medium text-gray-700">Price</label>
+                        <input type="number" name="price" id="price" value="{{ form.price.value }}" step="0.01"
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.price.errors %}
+                            <div class="text-red-600">{{ form.price.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="instalment" class="block text-lg font-medium text-gray-700">Instalment</label>
+                        <input type="number" name="instalment" id="instalment" value="{{ form.instalment.value }}" step="0.01"
+                               class="mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">
+                        {% if form.instalment.errors %}
+                            <div class="text-red-600">{{ form.instalment.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md mt-8">
+                    <h2 class="text-lg font-semibold text-gray-700 mb-4">Additional Features</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="rear_camera" id="rear_camera" {% if form.rear_camera.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="rear_camera" class="ml-3 text-lg font-medium text-gray-700">Rear Camera</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="sun_roof" id="sun_roof" {% if form.sun_roof.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="sun_roof" class="ml-3 text-lg font-medium text-gray-700">Sun Roof</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="auto_retract_mirror" id="auto_retract_mirror" {% if form.auto_retract_mirror.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="auto_retract_mirror" class="ml-3 text-lg font-medium text-gray-700">Auto Retract Mirror</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="electric_parking_brake" id="electric_parking_brake" {% if form.electric_parking_brake.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="electric_parking_brake" class="ml-3 text-lg font-medium text-gray-700">Electric Parking Brake</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="map_navigator" id="map_navigator" {% if form.map_navigator.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="map_navigator" class="ml-3 text-lg font-medium text-gray-700">Map Navigator</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="vehicle_stability_control" id="vehicle_stability_control" {% if form.vehicle_stability_control.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="vehicle_stability_control" class="ml-3 text-lg font-medium text-gray-700">Vehicle Stability Control</label>
+                        </div>
+
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="keyless_push_start" id="keyless_push_start" {% if form.keyless_push_start.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="keyless_push_start" class="ml-3 text-lg font-medium text-gray-700">Keyless Push Start</label>
+                        </div>
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="sports_mode" id="sports_mode" {% if form.sports_mode.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="sports_mode" class="ml-3 text-lg font-medium text-gray-700">Sports Mode</label>
+                        </div>
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="camera_360_view" id="camera_360_view" {% if form.camera_360_view.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="camera_360_view" class="ml-3 text-lg font-medium text-gray-700">Camera 360 View</label>
+                        </div>
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="power_sliding_door" id="power_sliding_door" {% if form.power_sliding_door.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="power_sliding_door" class="ml-3 text-lg font-medium text-gray-700">Power Sliding Door</label>
+                        </div>
+                        <div class="mb-4 flex items-center">
+                            <input type="checkbox" name="auto_cruise_control" id="auto_cruise_control" {% if form.auto_cruise_control.value %}checked{% endif %}
+                                   class="w-6 h-6 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="auto_cruise_control" class="ml-3 text-lg font-medium text-gray-700">Auto Cruise Control</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 mb-6">
+                    <label class="ml-3text-lg font-medium text-gray-700">Upload & Submit</label>
+                    <input type="hidden" id="image_url" name="image_url">
+                    <button type="button" id="upload_widget_opener" class="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-lg hover:bg-blue-700 transition duration-200 mt-1 block w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-blue-500 focus:border-blue-500">Upload Car Picture</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>  
+<script>
+    
+    var carId = '{{ car_id }}';
+    var cloudinaryWidget = cloudinary.createUploadWidget({
+        cloudName: 'dknxfk0qc', 
+        uploadPreset: 'TK_PBP_D12',
+        sources: ['local', 'camera'], 
+        multiple: false,
+        folder: 'produk_foto',
+        maxFileSize: 5 * 1024 * 1024,
+        cropping: true,
+        croppingAspectRatio: 1.0,
+        public_id: carId,
+    }, (error, result) => { 
+        if (!error && result && result.event === "success") { 
+            document.getElementById("image_url").value = result.info.secure_url;
+            document.getElementById("form_car").submit();
+        }
+    });
+
+    document.getElementById("upload_widget_opener").addEventListener("click", function() {
+        cloudinaryWidget.open();
+    });
+</script>
+{% endblock content %}
+

@@ -1,0 +1,83 @@
+.albert-sans-semibold {
+    font-family: "Albert Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.albert-sans-thin {
+    font-family: "Albert Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.truncate-2-lines {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-height: 3em !important;
+    white-space: normal !important;
+}
+
+.content-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+}
+
+.break-words {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+}
+
+.min-w-0 {
+    min-width: 0 !important;
+}
+
+.line-clamp-1 {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.line-clamp-2 {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.line-clamp-3 {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: #BFDBFE #FFFFFF !important;
+  }
+  
+  *::-webkit-scrollbar {
+    width: 5px !important; 
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: #FFFFFF !important; 
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background: #BFDBFE !important;
+    border-radius: 9999px !important;
+  }
+  
+  *::-webkit-scrollbar-thumb:hover {
+    background: #93C5FD !important; 
+  }

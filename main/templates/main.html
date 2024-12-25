@@ -1,0 +1,78 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block meta %}
+<title>Bekas Berkelas</title>
+{% endblock meta %} 
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="min-h-screen bg-white pt-16 md:pt-0">
+    <div class="container mx-auto px-4 h-full flex items-center">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-12 py-4 md:py-16">
+            <div class="w-full md:w-1/2 order-1 md:order-1 md:mt-32">
+                <div class="relative w-full">
+                    <div class="relative w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[450px] md:h-[450px] mx-auto rounded-full mt-5 sm:mt-0 overflow-hidden">
+                        <img src="{% static 'image/hero-image.png' %}" alt="Hero Section Image" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 text-center md:text-left px-4 md:px-0 order-2 md:order-2">
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 albert-sans-semibold">
+                    <div class="inline-block">
+                        <span class="text-[#0728bb]">mobil </span>
+                        <span class="text-[#174ff3]">bekas</span>
+                    </div>
+                    <br class="md:hidden" />
+                    <div class="inline-block mt-2 md:mt-0">
+                        <span class="text-[#0728bb]">kualitas </span>
+                        <span class="text-[#174ff3]">berkelas</span>
+                    </div>
+                </h1>
+                
+                <p class="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed tracking-wide max-w-prose mb-6 sm:mb-8 px-2 sm:px-0">
+                    Temukan mobil bekas terpilih dengan kualitas premium dan 
+                    harga terjangkau. Inspeksi ketat, performa terbaik—mobil 
+                    impian Anda menunggu di sini. Pilih mobil berkelas, rasakan 
+                    kepuasan tanpa kompromi!
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start albert-sans-semibold px-4 sm:px-0">
+                    <button onclick="window.location.href='/katalog/mobil_saya'" class="w-full sm:w-auto px-4 sm:px-6 py-3 rounded-lg border border-blue-600 text-[#0728bb] hover:bg-blue-50 transition-colors text-sm sm:text-base">
+                        Jual Mobil Anda
+                    </button>
+                    <button onclick="window.location.href='/katalog'" class="w-full sm:w-auto px-4 sm:px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                        Cari Mobil
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"/>
+                            <path d="M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="min-h-[50vh] md:min-h-[65vh] bg-[#1eac9e] relative overflow-hidden">
+    <div class="absolute inset-0 flex flex-col">
+        <div class="flex-none text-center pt-8 sm:pt-10 md:pt-12 px-4">
+            <h2 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mt-8 sm:mt-12 md:mt-0 mb-4 albert-sans-semibold px-2">
+                Temukan solusi terhadap masalah
+                <br class="hidden sm:block" />
+                mobil bekas yang Anda hadapi!
+            </h2>
+            <button onclick="window.location.href='/forum'" class="px-4 sm:px-6 py-2 bg-transparent border-2 border-white text-white rounded-lg albert-sans-semibold hover:bg-white hover:text-emerald-400 transition-colors text-sm sm:text-base">
+                Kunjungi Forum
+            </button>
+        </div>
+
+        <div class="flex-1 flex items-end justify-center px-4 mt-4 sm:mt-0 md:mt-16">
+            <div class="w-full max-w-4xl">
+                <img src="{% static 'image/forum.png' %}" alt="Forum Section" class="w-full h-auto object-contain">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

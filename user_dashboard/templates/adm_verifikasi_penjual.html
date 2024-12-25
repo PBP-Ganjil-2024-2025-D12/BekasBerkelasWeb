@@ -1,0 +1,212 @@
+{% extends 'base_dashboard.html' %}
+{% load static %}
+
+{% block mainbar %}
+<div class="flex gap-2 mt-4 mx-4 pt-3 pl-5 pb-3 border-b border-gray-400 p-4 ">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="m438-338 226-226-57-57-169 169-84-84-57 57 141 141Zm42 258q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z"/></svg>
+    <h2 class="albert-sans-semibold"> Verifikasi Penjual </h2>
+</div>
+<div class="flex flex-col grow items-center md:items-start md:grid md:grid md:grid-cols-[repeat(3,minmax(250px,1fr))] gap-4 py-4 p-10 w-full">
+    {% if not unverified_seller %}
+    <div class="col-span-3 gap-5 h-full flex flex-col justify-center items-center ">
+        <svg xmlns="http://www.w3.org/2000/svg" height="50px" viewBox="0 -960 960 960" width="50px" fill="#9CA3AF"><path d="M702-480 560-622l57-56 85 85 170-170 56 57-226 226Zm-342 0q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0 260Zm0-340Z"/></svg>
+        <h2 class="text-center text-gray-600 text-lg albert-sans-semibold">Proses verifikasi selesai. Semua penjual telah terverifikasi.</h2>
+    </div>
+    {% else %}
+    <div class="col-span-3 gap-5 h-full w-full flex">
+        <ul role="list" class="w-full divide-y divide-gray-200 pr-10">
+        {% for id, info in unverified_seller.items %}
+            <li class="w-full py-3 sm:py-4">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img class="w-8 h-8 rounded-full" src={{ info.profile_pic }} alt="Neil image">
+                    </div>
+                    <div class="mr-auto min-w-0 ms-4">
+                        <p class="truncate text-sm font-medium text-gray-900">
+                            {{info.nama}}
+                        </p>
+                        <p class="truncate text-sm text-gray-500">
+                            {{info.email}}
+                        </p>
+                    </div>
+                    <button data-seller-id="{{ id }}" type='button' class="view_button text-white albert-sans-semibold bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center">
+                        View
+                    </button>
+                </div>
+            </li>
+        {% endfor %}
+        <div class="flex justify-center mt-4">
+            <div class="pt-5 flex gap-3 justify-center">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="albert-sans-semibold px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="albert-sans-semibold px-4 py-2 bg-gray-200 text-gray-400 cursor-not-allowed rounded">
+                        Previous
+                    </span>
+                {% endif %}
+                    
+
+                <span class="hidden md:block albert-sans-semibold px-4 py-2 bg-gray-100 text-gray-600 font-semibold rounded text-nowrap">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class=" albert-sans-semibold px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="albert-sans-semibold px-4 py-2 bg-gray-200 text-gray-400 cursor-not-allowed rounded">
+                        Next
+                    </span>
+                {% endif %}
+            </div>
+        </ul>
+    </div>
+    {% endif %}
+
+    <div id="crudModal" tabindex="-1" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+        <div id="modalSeller" class="hidden relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl albert-sans-semibold text-gray-900">
+                    Verifikasi Seller
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" id="closeModalBtn">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                
+            </div>
+            <!-- Modal body -->
+            <div class="flex flex-col items-center pt-10 pb-10">
+                <img id="profile_pic_modal" class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/static/user_dashboard/image/default-profile.png" alt="profile_image"/>
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> Id </h2>
+                    <h2 id="idUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+                
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> Nama </h2>
+                    <h2 id="namaUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> Email </h2>
+                    <h2 id="emailUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> No Telp </h2>
+                    <h2 id="noTelpUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> Role </h2>
+                    <h2 id="roleUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+
+                <div class="flex gap-3 md:grid md:grid-cols-[repeat(2,minmax(150px,1fr))] pt-3 px-5">
+                    <h2 class="text-center col-span-1 albert-sans-semibold"> Status </h2>
+                    <h2 id="statusUser" class="col-span-1 albert-sans-thin">Loading..</h2>
+                </div>
+
+                <div class="flex mt-4 gap-5 md:mt-6">
+                    <form id="verifikasiSellerForm" method="POST">
+                        {% csrf_token %}
+                        <button type="button" id="verifikasiButton" form="verifikasiSellerForm" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Verifikasi</button>
+                        <button type="button" class="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" id="cancelButton">Cancel</button>
+                        <input id="inputIdUser" name="idUser" type="number" class="hidden">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    function updateProfilePic(sellerId) {
+        $.ajax({
+            url: '/dashboard/get_user/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 'id': sellerId }),
+            success: function(response) {
+                $('#profile_pic_modal').attr('src', response.profile_picture);
+                $('#idUser').text(response.id)
+                $('#namaUser').text(response.nama)
+                $('#emailUser').text(response.email)
+                $('#noTelpUser').text(response.no_telp)
+                $('#roleUser').text(response.role)
+                $("#statusUser").text(response.status)
+                $("#inputIdUser").val(response.id)
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function showModal(userId) {
+        const modal = $('#crudModal');
+        const modalContent = $("#modalSeller");
+
+        modal.removeClass('hidden');
+        modalContent.removeClass('hidden');
+        updateProfilePic(userId);
+
+        setTimeout(() => {
+            modalContent.removeClass('opacity-0 scale-95');
+            modalContent.addClass('opacity-100 scale-100');
+        }, 50);
+    }
+
+    function hideModal() {
+        const modal = $('#crudModal');
+        const modalContent = modal.find('.opacity-100.scale-100');
+
+        modalContent.removeClass('opacity-100 scale-100');
+        modalContent.addClass('opacity-0 scale-95');
+        
+        setTimeout(() => {
+            $('#profile_pic_modal').attr('src','/static/user_dashboard/image/default-profile.png');
+            $('#idUser').text('Loading..')
+            $('#namaUser').text('Loading..')
+            $('#emailUser').text('Loading..')
+            $('#noTelpUser').text('Loading..')
+            $('#roleUser').text('Loading..')
+            $("#statusUser").text('Loading..')
+            $("#inputIdUser").val('Loading..')
+
+            modal.addClass('hidden');
+            modalContent.addClass('hidden');
+        }, 150);
+    }
+
+    $(document).ready(function(){
+            $(".view_button").on('click', function() {
+                var userId = $(this).data('seller-id')
+                showModal(userId);
+            });
+
+        $("#crudModal #closeModalBtn, #crudModal #cancelButton").on('click', function() {
+            hideModal();
+        });
+    });
+
+    function submitSeller() {
+        $("#verifikasiSellerForm").submit();
+    }
+
+    $(document).ready(function(){
+        $("#verifikasiButton").on('click', function(){
+            submitSeller()
+        })
+    });
+
+</script>
+{% endblock mainbar %}

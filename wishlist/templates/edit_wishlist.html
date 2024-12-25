@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Edit Wish List | BekasBerkelas</title>
+{% endblock meta %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="bg-blue-100 min-h-screen py-10 pt-32 flex flex-col items-center">
+        <div class="w-full max-w-xs mx-auto bg-blue-100">
+            <h1 class="text-center text-3xl sm:text-3xl md:text-4xl font-bold text-[#1F1C61] albert-sans mb-6">
+                Edit Wish List
+            </h1>
+
+            <form method="POST" class="bg-white shadow-lg rounded-lg p-6 space-y-6">
+                {% csrf_token %}
+                
+                <div class="text-center">
+                    <p class="text-lg text-[#157A70] font-normal">Prioritas Saat Ini: 
+                        <span class="font-semibold">
+                            {{ wishlist.get_priority_display }}
+                        </span>
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center space-y-2">
+                    <label for="priority" class="text-[#1F1C61] font-bold text-lg">Prioritas Baru:</label>
+                    <select name="priority" class="w-36 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#07288B]">
+                        <option value="Rendah" {% if wishlist.priority == 'Rendah' %}selected{% endif %}>Rendah</option>
+                        <option value="Sedang" {% if wishlist.priority == 'Sedang' %}selected{% endif %}>Sedang</option>
+                        <option value="Tinggi" {% if wishlist.priority == 'Tinggi' %}selected{% endif %}>Tinggi</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-center space-x-4 pt-4">
+                    <button type="submit" class="bg-[#174FF3] hover:bg-[#0A39C4] text-white font-medium px-6 py-2 rounded-lg transition duration-300 shadow-sm">
+                        Simpan
+                    </button>
+                    <a href="{% url 'wishlist:show_wishlist' %}" class="bg-red-500 hover:bg-red-600 text-white font-medium px-6 py-2 rounded-lg transition duration-300 shadow-sm">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

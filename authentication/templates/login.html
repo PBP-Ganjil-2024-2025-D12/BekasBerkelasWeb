@@ -1,0 +1,68 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block meta %}
+<title>Login | BekasBerkelas</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center w-full bg-blue-100 px-4 py-12">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+        <div class="w-full flex justify-center mb-8">
+            <img src="{% static 'image/logo-text.png' %}" alt="Logo" class="h-[100px]">
+        </div>
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            <div class="rounded-md shadow-sm space-y-2">
+                <div>
+                    <label for="username" class="sr-only">Username</label>
+                    <input id="username" name="username" type="text" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group albert-sans-semibold relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    Log In
+                </button>
+            </div>
+        </form>
+
+        {% if messages %}
+        <div class="mt-4 space-y-2 albert-sans-semibold">
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r" role="alert">
+                    <p class="font-bold">Success</p>
+                    <p>{{ message }}</p>
+                </div>
+            {% elif message.tags == "error" %}
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r" role="alert">
+                    <p class="font-bold">Error</p>
+                    <p>{{ message }}</p>
+                </div>
+            {% else %}
+                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r" role="alert">
+                    <p class="font-bold">Info</p>
+                    <p>{{ message }}</p>
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-6 albert-sans-semibold">
+            <p class="text-sm text-[#1f1c61]">
+                Don't have an account yet?
+                <a href="{% url 'authentication:register' %}" class="font-medium text-blue-700 hover:text-blue-800 transition duration-150 ease-in-out">
+                    Register Now
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/auth.js>' %}"></script>
+{% endblock content %}

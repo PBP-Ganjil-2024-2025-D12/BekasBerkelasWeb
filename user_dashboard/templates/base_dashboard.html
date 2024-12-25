@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title> Dashboard | BekasBerkelas</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock meta %}
+
+{% block content %}
+{% include "navbar.html" %}
+
+<div class="overflow-x-hidden bg-blue-100 flex justify-center min-h-screen pt-20 pb-4 px-1 2xl:px-80">
+    <div class="py-1 px-5 flex items-center flex-col md:grid md:grid-cols-[repeat(5,minmax(155px,1fr))] min-w-full gap-4 max-w-full 2xl:w-auto">
+        <div class="bg-white rounded-md min-w-80 max-w-80 md:min-w-[155px] md:col-span-1 flex flex-col h-min md:h-full p-4">
+            <a class="p-4 rounded-t-md hover:bg-gray-100 flex gap-2 pl-5 pt-3 pb-3 border-b border-gray-400" href="/dashboard">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+                <h1 class="text-base albert-sans-semibold"> {{ request.user.userprofile.name }} </h1>
+            </a>
+
+            <a class="p-4 rounded-md hover:bg-gray-100" href="/dashboard">
+                <h2 class="albert-sans-thin">Biodata</h2>
+            </a>
+
+            {% if request.user.userprofile.role == 'SEL' %}
+                <a class="p-4 rounded-md hover:bg-gray-100" href={% url 'dashboard:rating_list' %}>
+                    <h2 class="albert-sans-thin">Ulasan Saya</h2>
+                </a>
+            {% elif request.user.userprofile.role == 'ADM' %}
+                <a class="p-4 rounded-md hover:bg-gray-100" href={% url 'dashboard:verifikasi_penjual' %}>
+                    <h2 class="albert-sans-thin">Verifikasi Penjual</h2>
+                </a>
+            {% endif %}
+
+        </div>
+        <div class="flex flex-col bg-white min-w-80 max-w-80 md:min-w-full md:max-w-full h-full min-h-min rounded-md md:col-span-4">
+            {% if messages %}
+            <div id="messages_card" class="albert-sans-semibold">
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="m-5 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-r" role="alert">
+                        <p class="font-bold">Success</p>
+                        <p>{{ message }}</p>
+                    </div>
+                {% elif message.tags == "error" %}
+                    <div class="m-5 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r" role="alert">
+                        <p class="font-bold">Error</p>
+                        <p>{{ message }}</p>
+                    </div>
+                {% else %}
+                    <div class="m-5 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r" role="alert">
+                        <p class="font-bold">Info</p>
+                        <p>{{ message }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+            {% endif %}
+            {% block mainbar %} {% endblock mainbar %}
+        </div>
+    </div>
+</div>  
+
+<script src="{% static 'js/show_messages.js' %}"></script>
+{% endblock content %}

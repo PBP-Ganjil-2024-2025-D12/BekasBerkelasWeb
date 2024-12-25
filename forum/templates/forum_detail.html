@@ -1,0 +1,221 @@
+{% extends 'base.html' %} {% load static %}
+{% block meta %}
+<title>Forum | BekasBerkelas</title>
+<style>
+    .break-words p {
+        font-family: "Albert Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+    }
+</style>
+{% endblock meta %} 
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="overflow-x-hidden px-3 sm:px-4 md:px-8 pb-6 sm:pb-8 pt-20 sm:pt-24 min-h-screen bg-blue-100 flex flex-col">
+    <div class="w-full max-w-7xl mx-auto mb-4 sm:mb-6">
+        <a href="{% url 'forum:show_forum' %}" class="inline-flex items-center text-blue-600 hover:text-blue-800 albert-sans-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Kembali ke Forum
+        </a>
+    </div>
+
+    <div class="w-full max-w-7xl mx-auto mb-4 sm:mb-6 albert-sans-semibold">
+        <div class="bg-white rounded-lg p-6 shadow-sm">
+            <div class="mb-6">
+                <div class="flex items-start justify-between mb-4">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 content-wrapper break-words">{{ question.title }}</h1>
+                
+                    {% if user == question.user or user.userprofile.role == 'ADM' %}
+                        <button class="text-red-600 hover:text-red-800 ml-4 flex-shrink-0 mt-1.5" onclick="deleteQuestion('{{ question.pk }}')">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center">
+                        <div class="flex items-center gap-2">
+                            {% if question.user.userprofile.profile_picture %}
+                                <img class="w-8 h-8 rounded-full flex-shrink-0" src="{{ question.user.userprofile.profile_picture }}" alt="Profile Picture" width="400" height="400">
+                            {% else %}
+                                <img class="w-8 h-8 rounded-full flex-shrink-0" src="{% static 'user_dashboard/image/default-profile.png' %}" alt="Default Profile Picture" width="400" height="400">
+                            {% endif %}
+                            <div class="flex items-center gap-2">
+                                <a href="/profile/{{ question.user.username }}" class="flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold albert-sans-semibold group">
+                                    <span class="font-semibold">{{ question.user.username }}</span>
+                                </a>
+                                <span class="sm:hidden px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium whitespace-nowrap">
+                                    {% if question.category == 'UM' %}Umum
+                                    {% elif question.category == 'JB' %}Jual Beli
+                                    {% elif question.category == 'TT' %}Tips & Trik
+                                    {% else %}Santai{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                
+                        <div class="flex sm:ml-2 items-center">
+                            <span class="text-gray-600 whitespace-nowrap">{{ question.formatted_time }} WIB</span>
+                            <span class="hidden sm:inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium whitespace-nowrap ml-2">
+                                {% if question.category == 'UM' %}Umum
+                                {% elif question.category == 'JB' %}Jual Beli
+                                {% elif question.category == 'TT' %}Tips & Trik
+                                {% else %}Santai{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if question.car %}
+                <div class="max-w-md bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 p-4 border border-gray-100">
+                    <h3 class="text-sm font-medium text-gray-500 mb-3">Related Car:</h3>
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <img src="{{ question.car.image_url }}" 
+                                 alt="Car Image" 
+                                 class="w-32 h-24 object-cover rounded-lg shadow-md">
+                        </div>
+                        <div class="flex-1 min-w-0 flex flex-col justify-center">
+                            <p class="text-lg font-semibold text-gray-900 mb-1">
+                                {{ question.car.brand }} {{ question.car.car_name }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                Tahun {{ question.car.year }}
+                            </p>
+                            <a href="/katalog/detail/{{ question.car.pk }}" class="flex items-center text-sm mt-2 text-blue-600 hover:text-blue-800 albert-sans-semibold group">
+                                <span class="mr-1">Selengkapnya</span>
+                                <svg class="w-4 h-4 transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="prose max-w-none mb-8 content-wrapper break-words">
+                {{ question.content|linebreaks }}
+            </div>
+
+            <div id="deleteQuestionModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+                <div id="deleteQuestionModalContent" class="relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+                    <div class="flex items-center justify-between p-4 border-b rounded-t">
+                        <h3 class="text-xl font-semibold text-gray-900 albert-sans-semibold">
+                            Hapus Forum
+                        </h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center close-modal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+            
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">Apakah Anda yakin ingin menghapus forum ini?</p>
+                        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 justify-center md:justify-end albert-sans-semibold">
+                            <button type="button" id="confirmDeleteQuestion" class="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 transition duration-300 shadow-md">
+                                Hapus
+                            </button>
+                            <button type="button" class="text-white bg-blue-500 hover:bg-blue-600 rounded-full px-4 py-2 transition duration-300 shadow-md close-modal">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t pt-6">
+                <h2 class="text-xl font-bold mb-4">Balasan ({{ question.reply_count }})</h2>
+
+                <div class="space-y-4" id="repliesContainer">
+                    {% for reply in replies %}
+                    <div class="flex gap-4 min-w-0">
+                        {% if reply.user.userprofile.profile_picture %}
+                            <img class="w-8 h-8 rounded-full flex-shrink-0" src="{{ reply.user.userprofile.profile_picture }}" alt="Profile Picture" width="400" height="400">
+                        {% else %}
+                            <img class="w-8 h-8 rounded-full flex-shrink-0" src="{% static 'user_dashboard/image/default-profile.png' %}" alt="Default Profile Picture" width="400" height="400">
+                        {% endif %}
+                        <div class="flex-1 min-w-0">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center justify-between gap-2 mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <a href="/profile/{{ reply.user.username }}" class="flex items-center text-sm text-blue-600 hover:text-blue-800 font-semibold albert-sans-semibold group">
+                                            <span class="font-semibold whitespace-nowrap">{{ reply.user.username }}</span>
+                                        </a>
+                                        <span class="text-sm text-gray-600 whitespace-nowrap">{{ reply.formatted_time }} WIB</span>
+                                        <span class="text-gray-800">{{ reply.role }}</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        {% if user == reply.user or user == question.user or user.userprofile.role == 'ADM' %}
+                                        <button class="text-red-600 hover:text-red-800 flex-shrink-0" 
+                                                onclick="deleteReply('{{ question.pk }}', '{{ reply.pk }}')">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="break-words"> 
+                                    <p class="font-light">{{ reply.content|linebreaks }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'forum:create_reply' question.id %}" class="mt-6">
+                    {% csrf_token %}
+                    <textarea 
+                        name="content"
+                        rows="3"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Tambahkan balasan..."></textarea>
+                    <div class="mt-2 flex justify-end">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white albert-sans-semibold  py-2 px-4 rounded-xl transition duration-300 ease-in-out text-sm shadow-sm">
+                            Kirim Balasan
+                        </button>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+
+            <div id="deleteReplyModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-x-hidden overflow-y-auto transition-opacity duration-300 ease-out">
+                <div id="deleteReplyModalContent" class="relative bg-white rounded-lg shadow-lg w-5/6 sm:w-3/4 md:w-1/2 lg:w-1/3 mx-4 sm:mx-0 transform scale-95 opacity-0 transition-transform transition-opacity duration-300 ease-out">
+                    <div class="flex items-center justify-between p-4 border-b rounded-t">
+                        <h3 class="text-xl font-semibold text-gray-900 albert-sans-semibold">
+                            Delete Balasan
+                        </h3>
+                        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center close-modal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+            
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">Apakah Anda yakin ingin menghapus balasan ini?</p>
+                        <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 justify-center md:justify-end albert-sans-semibold">
+                            <button type="button" id="confirmDeleteReply" class="bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 transition duration-300 shadow-md">
+                                Hapus
+                            </button>
+                            <button type="button" class="text-white  bg-blue-500 hover:bg-blue-600 rounded-full px-4 py-2 transition duration-300 shadow-md close-modal">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/forum.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% load static %} 
+
+{% block meta %}
+<title>Register | BekasBerkelas</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class="min-h-screen flex flex-col md:flex-row w-screen bg-blue-100 px-4 pt-0 md:py-6 sm:px-6 lg:px-8">
+    <div class="w-full md:w-1/2 flex items-center justify-center pt-8 mb-8 md:mb-0 md:ml-[5%]">
+        <img src="{% static 'image/logo-text.png' %}" alt="Logo" class="h-40 md:h-60 lg:h-80">
+    </div>
+
+    <div class="w-full md:w-1/2 md:max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg albert-sans-semibold md:mr-[15%] mb-8 md:mb-0">        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Name">
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="text" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email">
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="no_telp">No Telp</label>
+                <input id="no_telp" name="no_telp" type="text" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="No Telp">
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="role">User Role</label>
+                <div class="relative">
+                    <select id="role" name="role" required class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm">
+                        <option value="" selected class="albert-sans-semibold">Choose role</option>
+                        <option value="BUY" class="albert-sans-semibold">Buyer</option>
+                        <option value="SEL" class="albert-sans-semibold">Seller</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="password1">Password</label>
+                <input id="password1" name="password1" type="password" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+            </div>
+
+            <div class="mt-2 relative">
+                <label for="password2">Confirm Password</label>
+                <input id="password2" name="password2" type="password" required class="appearance-none albert-sans-semibold rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Confirm Password">
+            </div>
+
+            <div class="mt-8 relative">
+                <button type="submit" class="group albert-sans-semibold relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    Register
+                </button>
+            </div>
+        </form>
+
+        {% if messages %}
+        <div class="mt-4 space-y-2">
+        {% for message in messages %}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r" role="alert">
+            <p class="font-bold">Error</p>
+            <p>{{ message }}</p>
+        </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-8 albert-sans-semibold">
+            <p class="text-sm text-[#1f1c61]">
+                Already have an account?
+                <a href="{% url 'authentication:login' %}" class="font-medium text-blue-700 hover:text-blue-800 transition duration-150 ease-in-out">
+                    Login Now
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/auth.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% if not is_seller %}
+    <h1>All Cars</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Car Name</th>
+                <th>Brand</th>
+                <th>Year</th>
+                <th>Mileage (km)</th>
+                <th>Location</th>
+                <th>Transmission</th>
+                <th>Plate Type</th>
+                <th>Rear Camera</th>
+                <th>Sun Roof</th>
+                <th>Auto Retract Mirror</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+                <tr>
+                    <td>{{ car.car_name }}</td>
+                    <td>{{ car.brand }}</td>
+                    <td>{{ car.year }}</td>
+                    <td>{{ car.mileage }}</td>
+                    <td>{{ car.location }}</td>
+                    <td>{{ car.transmission }}</td>
+                    <td>{{ car.plate_type }}</td>
+                    <td>{{ car.rear_camera|yesno:"Yes,No" }}</td>
+                    <td>{{ car.sun_roof|yesno:"Yes,No" }}</td>
+                    <td>{{ car.auto_retract_mirror|yesno:"Yes,No" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
