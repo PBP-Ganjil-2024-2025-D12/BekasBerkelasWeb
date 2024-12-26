@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Exists, OuterRef
+from wishlist.models import Wishlist
 
 
 @csrf_exempt
@@ -312,7 +314,7 @@ def car_list(request):
     else:
         cars = Car.objects.all()
     form = CarFilterForm(request.GET)
-    user_wishlist = Wishlist.objects.filter(user=request.user).values_list('id', flat=True)
+    user_wishlist = []
 
     if form.is_valid():
         car_name = form.cleaned_data.get('car_name')
@@ -374,6 +376,10 @@ def car_list(request):
             cars = cars.filter(instalment__gte=instalment_min)
         if instalment_max is not None:
             cars = cars.filter(instalment__lte=instalment_max)
+            
+    if request.user.is_authenticated:
+        user_wishlist = Wishlist.objects.filter(user=request.user).values_list('car__pk', flat=True)
+        cars = cars.annotate(is_in_wishlist=Exists(user_wishlist.filter(car=OuterRef('pk'))))
 
     context = {
         'cars': cars,

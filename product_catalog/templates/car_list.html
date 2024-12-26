@@ -85,7 +85,7 @@
 
 button.wishlist-button {
     color: white;
-    background-color: gray;
+    background-color: #007BFF;
     border-radius: 5px;
     padding: 8px 12px;
     cursor: pointer;
@@ -219,8 +219,12 @@ button.wishlist-button.active {
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">View Details</button>
                 </form>
                 <button class="bg-green-500 text-white px-4 py-2 rounded group albert-sans-semibold relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" onclick="openContactModal('{{ car.id }}')">Contact Me</button>
-                <button class="wishlist-button" data-is-authenticated="true" data-car-id="{{ car.id }}" onclick="toggleWishlist(event, this)">
-                    Add to Wishlist
+                <button class="wishlist-button {% if car.is_in_wishlist %}active{% endif %}" 
+                data-is-authenticated="{{ user.is_authenticated }}" 
+                data-car-id="{{ car.id }}" 
+                data-is-in-wishlist="{{ car.is_in_wishlist|yesno:'true,false' }}" 
+                onclick="toggleWishlist(event, this)">
+                    {% if car.is_in_wishlist %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}
                 </button>
                 
                 
@@ -276,54 +280,53 @@ button.wishlist-button.active {
             additionalFilters.style.display = 'none';
         }
         });
+
         function toggleWishlist(event, button) {
             event.preventDefault();
             event.stopPropagation();
-        
-            const isAuthenticated = button.getAttribute('data-is-authenticated') === 'true';
+            
+            const isAuthenticated = button.getAttribute('data-is-authenticated') === 'True';
             const carId = button.getAttribute('data-car-id');
-        
+            const isInWishlist = button.getAttribute('data-is-in-wishlist') === 'true';
+            
             if (!isAuthenticated) {
                 window.location.href = '/auth/login';
                 return;
             }
-        
-            const csrftoken = getCookie('csrftoken');
-        
+            
+            const action = isInWishlist ? 'remove' : 'add';
+            const csrfToken = getCookie('csrftoken');
+            
             fetch(`/wishlist/add/${carId}`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': csrftoken,
+                    'X-CSRFToken': csrfToken,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    car_id: carId
+                    action: action
                 }),
                 credentials: 'same-origin'
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    if (data.action === 'added') {
+                    button.setAttribute('data-is-in-wishlist', String(!isInWishlist));
+                    if (!isInWishlist) {
                         button.classList.add('active');
-                        button.textContent = 'Added to Wishlist';
-                    } else if (data.action === 'removed') {
+                    } else {
                         button.classList.remove('active');
-                        button.textContent = 'Add to Wishlist';
                     }
+                    button.textContent = isInWishlist ? 'Add to Wishlist' : 'Remove from Wishlist';
+                } else {
+                    alert(data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat memproses permintaan Anda');
+                alert('An error occurred while processing your request.');
             });
         }
-        
 
         function toggleDetails(carId) {
             const detailsDiv = document.getElementById(`car-details-${carId}`);
